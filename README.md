@@ -2,6 +2,8 @@
 
 Scoreboard and turn timer for Rummikub. A static, client-side PWA: no backend, all data lives in the browser's `localStorage`.
 
+**Live app:** https://grabtom.github.io/rummikub-score/
+
 ## Features
 
 - **Scoreboard** – run many games at once, 2–6 players, standard Rummikub scoring (enter tiles left in hand; the winner scores the sum). Swipe a game left to archive, export or delete it; start and last-edit timestamps are kept. Tap a round row to edit or delete it. Export copies a share link to the clipboard.
