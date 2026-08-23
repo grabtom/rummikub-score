@@ -1,6 +1,6 @@
 import { listGames, deleteGame, updateGame } from '../storage.js';
 import { buildExportUrl } from '../share.js';
-import { esc, totals, shareText } from '../util.js';
+import { esc, totals, copyWithToast } from '../util.js';
 import { t, formatDate } from '../i18n.js';
 import { enableSwipe } from '../swipe.js';
 import { openNewGameDialog } from './new-game.js';
@@ -47,10 +47,8 @@ export function render(root) {
       ${archived.length ? `<button class="btn block" id="toggle-archived">${showArchived ? t('hideArchived') : `${t('archivedGames')} (${archived.length})`}</button>` : ''}
       ${archived.length && showArchived ? `<ul class="list archived">${archived.map(gameItem).join('')}</ul>` : ''}
       ${games.length ? `<button class="btn block" id="export-all">${t('exportAll')}</button>` : ''}
-      <p class="muted" id="status"></p>
     </div>`;
 
-  const status = root.querySelector('#status');
   root.querySelector('#new-game').addEventListener('click', openNewGameDialog);
   root.querySelector('#toggle-archived')?.addEventListener('click', () => { showArchived = !showArchived; render(root); });
 
@@ -65,7 +63,7 @@ export function render(root) {
         updateGame(id, (g) => { g.archived = !g.archived; });
       } else if (action === 'export') {
         const url = await buildExportUrl([games.find((g) => g.id === id)]);
-        status.textContent = await shareText(t('appName'), url);
+        copyWithToast(url, t('copied'));
         return;
       }
       render(root);
@@ -75,6 +73,6 @@ export function render(root) {
 
   root.querySelector('#export-all')?.addEventListener('click', async () => {
     const url = await buildExportUrl(games);
-    status.textContent = await shareText(t('appName'), url);
+    copyWithToast(url, t('copied'));
   });
 }

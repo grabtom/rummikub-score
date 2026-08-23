@@ -1,6 +1,7 @@
 // Header gear → settings dialog (language, theme). Theme applied via <html data-theme>.
 import { getSettings, setSettings } from './storage.js';
 import { t, LANGUAGES } from './i18n.js';
+import { choiceGroup, bindChoice } from './util.js';
 
 export const THEMES = ['auto', 'light', 'dark', 'paper', 'ocean', 'forest', 'midnight'];
 
@@ -14,20 +15,17 @@ export function mountSettingsUi(onChange) {
 
   function render() {
     const s = getSettings();
-    const opt = (v, label, cur) => `<option value="${v}" ${v === cur ? 'selected' : ''}>${label}</option>`;
     dialog.innerHTML = `
       <button class="dialog-close" data-close aria-label="${t('close')}">×</button>
       <h1>${t('settings')}</h1>
       <div class="stack" style="text-align:left">
-        <label>${t('language')}
-          <select name="lang">${opt('', t('langAuto'), s.lang || '')}${LANGUAGES.map((l) => opt(l, l.toUpperCase(), s.lang)).join('')}</select>
-        </label>
-        <label>${t('theme')}
-          <select name="theme">${THEMES.map((th) => opt(th, t('theme' + th[0].toUpperCase() + th.slice(1)), s.theme || 'auto')).join('')}</select>
-        </label>
+        <label>${t('language')}</label>
+        ${choiceGroup([['', t('langAuto')], ...LANGUAGES.map((l) => [l, l.toUpperCase()])], s.lang || '', 'lang')}
+        <label>${t('theme')}</label>
+        ${choiceGroup(THEMES.map((th) => [th, t('theme' + th[0].toUpperCase() + th.slice(1))]), s.theme || 'auto', 'theme')}
       </div>`;
-    dialog.querySelector('[name=lang]').addEventListener('change', (e) => { setSettings({ lang: e.target.value }); render(); onChange(); });
-    dialog.querySelector('[name=theme]').addEventListener('change', (e) => { setSettings({ theme: e.target.value }); applyTheme(); });
+    bindChoice(dialog, 'lang', (v) => { setSettings({ lang: v }); render(); onChange(); });
+    bindChoice(dialog, 'theme', (v) => { setSettings({ theme: v }); applyTheme(); });
     dialog.querySelector('[data-close]').addEventListener('click', () => dialog.close());
   }
 
