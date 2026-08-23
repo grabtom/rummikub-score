@@ -41,7 +41,7 @@ Any static server, e.g. `python3 -m http.server` then open http://localhost:8000
 ## Deploy to GitHub Pages
 
 1. Push to GitHub.
-2. Settings → Pages → Source: *Deploy from a branch*, branch `main`, folder `/ (root)`.
+2. Settings → Pages → Source: *GitHub Actions*. `.github/workflows/pages.yml` then deploys every push to `main` (after running `node test.mjs`).
 3. Open `https://<user>.github.io/<repo>/`. On a phone use "Add to Home Screen" to install.
 
 Bump `CACHE` in `sw.js` when deploying changes so installed clients refresh.
