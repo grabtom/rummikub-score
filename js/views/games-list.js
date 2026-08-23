@@ -1,20 +1,35 @@
 import { listGames, deleteGame, updateGame } from '../storage.js';
 import { buildExportUrl } from '../share.js';
-import { esc, formatDate, totals, shareText } from '../util.js';
+import { esc, totals, shareText } from '../util.js';
+import { t, formatDate } from '../i18n.js';
+import { enableSwipe } from '../swipe.js';
+import { openNewGameDialog } from './new-game.js';
+
+const ICONS = {
+  archive: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18v4H3zM5 8v12h14V8M10 12h4"/></svg>',
+  unarchive: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18v4H3zM5 8v12h14V8M12 18v-6M9 15l3-3 3 3"/></svg>',
+  export: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 8l5-5 5 5M4 14v6h16v-6"/></svg>',
+  delete: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+};
+
+let showArchived = false;
 
 function gameItem(g) {
-  const t = totals(g);
-  const max = Math.max(...t);
-  const standings = g.players.map((p, i) => `${esc(p)} ${t[i]}${t[i] === max && g.rounds.length ? ' ★' : ''}`).join(' · ');
+  const tot = totals(g);
+  const max = Math.max(...tot);
+  const standings = g.players.map((p, i) => `${esc(p)} ${tot[i]}${tot[i] === max && g.rounds.length ? ' ★' : ''}`).join(' · ');
+  const arch = g.archived ? 'unarchive' : 'archive';
   return `
-    <li data-id="${g.id}">
-      <a class="title" href="#/game/${g.id}">${esc(g.players.join(', '))}</a>
-      <div class="meta">${g.rounds.length} rounds · started ${formatDate(g.createdAt)} · edited ${formatDate(g.updatedAt)}</div>
-      <div class="muted">${standings}</div>
-      <div class="row" style="margin-top:8px">
-        <button class="btn small" data-action="archive">${g.archived ? 'Unarchive' : 'Archive'}</button>
-        <button class="btn small" data-action="export">Export</button>
-        <button class="btn small" data-action="delete">Delete</button>
+    <li class="swipe" data-id="${g.id}">
+      <div class="swipe-actions">
+        <button class="act-archive" data-action="archive">${ICONS[arch]}${t(arch)}</button>
+        <button class="act-export" data-action="export">${ICONS.export}${t('export')}</button>
+        <button class="act-delete" data-action="delete">${ICONS.delete}${t('delete')}</button>
+      </div>
+      <div class="swipe-content">
+        <a class="title" href="#/game/${g.id}">${esc(g.players.join(', '))}</a>
+        <div class="meta">${t('rounds', { n: g.rounds.length })} · ${t('started', { date: formatDate(g.createdAt) })} · ${t('edited', { date: formatDate(g.updatedAt) })}</div>
+        <div class="muted">${standings}</div>
       </div>
     </li>`;
 }
@@ -26,36 +41,40 @@ export function render(root) {
 
   root.innerHTML = `
     <div class="stack">
-      <a class="btn primary block" href="#/new" style="display:block;text-align:center;text-decoration:none">New game</a>
-      <h2>Games in progress</h2>
-      ${active.length ? `<ul class="list">${active.map(gameItem).join('')}</ul>` : '<p class="muted">No games yet.</p>'}
-      ${archived.length ? `<h2>Archived</h2><ul class="list archived">${archived.map(gameItem).join('')}</ul>` : ''}
-      ${games.length ? '<button class="btn block" id="export-all">Export all games</button>' : ''}
+      <button class="btn primary block" id="new-game">${t('newGame')}</button>
+      <h2>${t('gamesInProgress')}</h2>
+      ${active.length ? `<ul class="list">${active.map(gameItem).join('')}</ul>` : `<p class="muted">${t('noGames')}</p>`}
+      ${archived.length ? `<button class="btn block" id="toggle-archived">${showArchived ? t('hideArchived') : `${t('archivedGames')} (${archived.length})`}</button>` : ''}
+      ${archived.length && showArchived ? `<ul class="list archived">${archived.map(gameItem).join('')}</ul>` : ''}
+      ${games.length ? `<button class="btn block" id="export-all">${t('exportAll')}</button>` : ''}
       <p class="muted" id="status"></p>
     </div>`;
 
   const status = root.querySelector('#status');
+  root.querySelector('#new-game').addEventListener('click', openNewGameDialog);
+  root.querySelector('#toggle-archived')?.addEventListener('click', () => { showArchived = !showArchived; render(root); });
 
   root.querySelectorAll('li[data-id] button').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const id = btn.closest('li').dataset.id;
       const action = btn.dataset.action;
       if (action === 'delete') {
-        if (!confirm('Delete this game? This cannot be undone.')) return;
+        if (!confirm(t('confirmDelete'))) return;
         deleteGame(id);
       } else if (action === 'archive') {
         updateGame(id, (g) => { g.archived = !g.archived; });
       } else if (action === 'export') {
         const url = await buildExportUrl([games.find((g) => g.id === id)]);
-        status.textContent = await shareText('Rummikub game', url);
+        status.textContent = await shareText(t('appName'), url);
         return;
       }
       render(root);
     });
   });
+  enableSwipe(root);
 
   root.querySelector('#export-all')?.addEventListener('click', async () => {
     const url = await buildExportUrl(games);
-    status.textContent = await shareText('Rummikub games', url);
+    status.textContent = await shareText(t('appName'), url);
   });
 }

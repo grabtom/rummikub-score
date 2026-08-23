@@ -4,9 +4,10 @@ Scoreboard and turn timer for Rummikub. A static, client-side PWA: no backend, a
 
 ## Features
 
-- **Scoreboard** – run many games at once, 2–6 players, standard Rummikub scoring (enter tiles left in hand; the winner scores the sum). Archive or delete games; start and last-edit timestamps are kept. Tap a round row to delete it.
+- **Scoreboard** – run many games at once, 2–6 players, standard Rummikub scoring (enter tiles left in hand; the winner scores the sum). Swipe a game left to archive, export or delete it; start and last-edit timestamps are kept. Tap a round row to delete it.
 - **Timer** – floating button on every screen, 30–120 s (default 60 s), warning beep at 15 s and "pi – pi – piiii" for the last 3 seconds.
 - **Export / import** – share all games or a single game as a long URL. Opening the link on another device lets you pick which games to merge into local storage (newer copy wins).
+- **Settings** – language (auto-detected from the device, override to EN/PL) and colour theme (light, dark, paper, ocean, forest, midnight, or follow system).
 - **PWA** – installable on a phone, works offline.
 
 ## Project layout
@@ -22,6 +23,9 @@ js/share.js           URL export/import codec
 js/timer.js           countdown logic + audio cues
 js/timer-ui.js        floating button + dialog
 js/util.js            helpers, scoring
+js/i18n.js            translations, language detection
+js/settings-ui.js     settings dialog, theme switching
+js/swipe.js           swipe-to-reveal row actions
 js/views/*.js         one file per screen
 test.mjs              self-check (node test.mjs)
 ```
@@ -47,7 +51,7 @@ Alternatives that work equally well with zero config: Cloudflare Pages, Netlify 
 Single `localStorage` key `rummikub-score`:
 
 ```
-{ version, games: { [id]: { id, players, rounds, createdAt, updatedAt, archived } }, settings: { timerSeconds } }
+{ version, games: { [id]: { id, players, rounds, createdAt, updatedAt, archived } }, settings: { timerSeconds, lang, theme } }
 ```
 
 `rounds` is an array of per-player score arrays. Export URLs carry `#import=<base64url(deflate-raw(json))>`.

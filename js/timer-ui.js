@@ -1,16 +1,13 @@
 // Floating timer button + dialog. Mounted once; works on every view.
 import { createTimer } from './timer.js';
 import { getSettings, setSettings } from './storage.js';
+import { t } from './i18n.js';
+import { closeOnBackdrop } from './settings-ui.js';
 
 export function mountTimerUi() {
-  const fab = document.getElementById('timer-fab');
-  const dialog = document.getElementById('timer-dialog');
-  const display = document.getElementById('timer-display');
-  const startBtn = document.getElementById('timer-start');
-  const resetBtn = document.getElementById('timer-reset');
-  const closeBtn = document.getElementById('timer-close');
-  const range = document.getElementById('timer-duration');
-  const rangeOut = document.getElementById('timer-duration-out');
+  const $ = (id) => document.getElementById(id);
+  const fab = $('timer-fab'), dialog = $('timer-dialog'), display = $('timer-display');
+  const startBtn = $('timer-start'), resetBtn = $('timer-reset'), range = $('timer-duration'), rangeOut = $('timer-duration-out');
 
   const timer = createTimer({ onTick: render, onFinish: render });
 
@@ -21,7 +18,9 @@ export function mountTimerUi() {
     display.className = `timer-display ${level}`;
     fab.textContent = timer.running ? String(sec) : '⏱';
     fab.className = `fab ${level}`;
-    startBtn.textContent = timer.running ? 'Pause' : 'Start';
+    startBtn.textContent = timer.running ? t('pause') : t('start');
+    resetBtn.textContent = t('reset');
+    $('timer-duration-label').textContent = t('duration');
     range.disabled = timer.running;
   }
 
@@ -30,8 +29,9 @@ export function mountTimerUi() {
   rangeOut.textContent = timerSeconds;
   timer.setDuration(timerSeconds);
 
-  fab.addEventListener('click', () => dialog.showModal());
-  closeBtn.addEventListener('click', () => dialog.close());
+  fab.addEventListener('click', () => { render(); dialog.showModal(); });
+  $('timer-close').addEventListener('click', () => dialog.close());
+  closeOnBackdrop(dialog);
   startBtn.addEventListener('click', () => {
     if (timer.running) timer.pause();
     else { if (timer.remaining <= 0) timer.reset(); timer.start(); }
@@ -44,4 +44,5 @@ export function mountTimerUi() {
     timer.setDuration(sec);
     setSettings({ timerSeconds: sec });
   });
+  return render;
 }

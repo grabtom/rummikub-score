@@ -14,23 +14,26 @@
 </head>
 <body>
   <header class="topbar">
-    <a href="#/" class="brand">Rummikub Score</a>
+    <a href="#/" class="brand" id="brand">Rummikub Score</a>
+    <button id="settings-btn" class="icon-btn" aria-label="Settings">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    </button>
   </header>
   <main id="app"></main>
 
-  <button id="timer-fab" class="fab" aria-label="Open timer">⏱</button>
-  <dialog id="timer-dialog" class="timer">
+  <button id="timer-fab" class="fab" aria-label="Timer">⏱</button>
+  <dialog id="timer-dialog" class="modal timer">
+    <button class="dialog-close" id="timer-close" aria-label="Close">×</button>
     <div class="timer-display" id="timer-display">60</div>
-    <div class="timer-controls">
-      <button id="timer-start" class="btn primary">Start</button>
-      <button id="timer-reset" class="btn">Reset</button>
-    </div>
+    <button id="timer-start" class="btn primary timer-start" autofocus>Start</button>
+    <button id="timer-reset" class="btn small timer-reset">Reset</button>
     <label class="timer-duration">
-      Duration: <output id="timer-duration-out">60</output>s
+      <span id="timer-duration-label">Duration</span>: <output id="timer-duration-out">60</output>s
       <input type="range" id="timer-duration" min="30" max="120" step="5" value="60">
     </label>
-    <button id="timer-close" class="btn link">Close</button>
   </dialog>
+  <dialog id="settings-dialog" class="modal"></dialog>
+  <dialog id="new-game-dialog" class="modal"></dialog>
 
   <script type="module" src="js/app.js"></script>
 </body>
