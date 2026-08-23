@@ -77,8 +77,10 @@ label > input, label > select { margin-top: 4px; color: var(--fg); }
 .swipe-actions .act-archive { background: #546e7a; }
 .swipe-actions .act-export { background: #1976d2; }
 .swipe-actions .act-delete { background: #c62828; }
-.list .title { font-weight: 600; text-decoration: none; display: block; }
-.list .meta { font-size: .85rem; color: var(--muted); margin: 2px 0 4px; }
+.list .title { font-weight: 600; text-decoration: none; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.list .badge { font-size: .85rem; font-weight: 600; min-width: 2em; padding: 2px 8px; text-align: center; border: 1px solid var(--fg); border-radius: var(--radius); }
+.list .meta { font-size: .85rem; color: var(--muted); margin-top: 2px; }
+.list .meta + .muted { margin-top: 4px; }
 .list.archived .title { color: var(--muted); }
 
 /* Scoreboard */

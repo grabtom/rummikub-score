@@ -27,8 +27,12 @@ function gameItem(g) {
         <button class="act-delete" data-action="delete">${ICONS.delete}${t('delete')}</button>
       </div>
       <div class="swipe-content">
-        <a class="title" href="#/game/${g.id}">${esc(g.players.join(', '))}</a>
-        <div class="meta">${t('rounds', { n: g.rounds.length })} · ${t('started', { date: formatDate(g.createdAt) })} · ${t('edited', { date: formatDate(g.updatedAt) })}</div>
+        <a class="title" href="#/game/${g.id}">
+          <span>${esc(g.players.join(', '))}</span>
+          <span class="badge" title="${t('rounds', { n: g.rounds.length })}">${g.rounds.length}</span>
+        </a>
+        <div class="meta">${t('started', { date: formatDate(g.createdAt) })}</div>
+        <div class="meta">${t('edited', { date: formatDate(g.updatedAt) })}</div>
         <div class="muted">${standings}</div>
       </div>
     </li>`;
