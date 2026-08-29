@@ -129,8 +129,9 @@ label > input, label > select { margin-top: 4px; color: var(--fg); }
 .timer-display { font-size: 6rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; margin: 8px 0 16px; }
 .timer-display.warning { color: var(--warn); }
 .timer-display.critical { color: var(--accent); }
-.timer-start { display: block; width: 60%; margin: 0 auto 8px; }
-.timer-reset { display: block; width: 40%; margin: 0 auto 16px; }
+.timer-next { display: block; width: 100%; min-height: 64px; font-size: 1.25rem; margin-bottom: 12px; background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.timer-secondary { margin-bottom: 16px; }
+.timer-secondary .btn { flex: 1; }
 .timer-duration { margin-bottom: 8px; }
 .timer-duration input { width: 100%; margin-top: 6px; accent-color: var(--accent); }
 .dialog-close:focus:not(:focus-visible) { outline: none; }

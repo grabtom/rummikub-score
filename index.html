@@ -25,8 +25,11 @@
   <dialog id="timer-dialog" class="modal timer">
     <button class="dialog-close" id="timer-close" aria-label="Close">×</button>
     <div class="timer-display" id="timer-display">60</div>
-    <button id="timer-start" class="btn primary timer-start" autofocus>Start</button>
-    <button id="timer-reset" class="btn small timer-reset">Reset</button>
+    <button id="timer-next" class="btn timer-next">Next player</button>
+    <div class="row center timer-secondary">
+      <button id="timer-start" class="btn small">Start</button>
+      <button id="timer-reset" class="btn small">Reset</button>
+    </div>
     <label class="timer-duration">
       <span id="timer-duration-label">Duration</span>: <output id="timer-duration-out">60</output>s
       <input type="range" id="timer-duration" min="30" max="120" step="5" value="60">

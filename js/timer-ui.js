@@ -7,7 +7,7 @@ import { closeOnBackdrop } from './settings-ui.js';
 export function mountTimerUi() {
   const $ = (id) => document.getElementById(id);
   const fab = $('timer-fab'), dialog = $('timer-dialog'), display = $('timer-display');
-  const startBtn = $('timer-start'), resetBtn = $('timer-reset'), range = $('timer-duration'), rangeOut = $('timer-duration-out');
+  const startBtn = $('timer-start'), resetBtn = $('timer-reset'), nextBtn = $('timer-next'), range = $('timer-duration'), rangeOut = $('timer-duration-out');
 
   const timer = createTimer({ onTick: render, onFinish: render });
 
@@ -20,6 +20,7 @@ export function mountTimerUi() {
     fab.className = `fab ${level}`;
     startBtn.textContent = timer.running ? t('pause') : t('start');
     resetBtn.textContent = t('reset');
+    nextBtn.textContent = t('nextPlayer');
     $('timer-duration-label').textContent = t('duration');
     range.disabled = timer.running;
   }
@@ -38,6 +39,8 @@ export function mountTimerUi() {
     render();
   });
   resetBtn.addEventListener('click', () => timer.reset());
+  // One tap on player change: restart from full duration.
+  nextBtn.addEventListener('click', () => { timer.reset(); timer.start(); render(); });
   range.addEventListener('input', () => {
     const sec = Number(range.value);
     rangeOut.textContent = sec;
