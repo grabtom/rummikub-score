@@ -25,6 +25,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: node test.mjs
+      - uses: actions/cache@v4
+        with:
+          path: vendor/vosk
+          key: vosk-${{ hashFiles('scripts/fetch-vosk.sh') }}
+      - run: sh scripts/fetch-vosk.sh
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

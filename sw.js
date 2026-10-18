@@ -1,6 +1,6 @@
 // Minimal app-shell service worker: cache-first for everything in the shell.
-// Bump CACHE on every deploy so clients pick up new files.
-const CACHE = 'rummikub-score-v6';
+// Bump CACHE on every deploy so clients pick up new files. Caches named vosk-* (voice models) survive.
+const CACHE = 'rummikub-score-v7';
 const SHELL = [
   './',
   './index.html',
@@ -32,7 +32,7 @@ self.addEventListener('install', (e) => {
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE && !k.startsWith('vosk-')).map((k) => caches.delete(k))))
       .then(() => self.clients.claim()),
   );
 });

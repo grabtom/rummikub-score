@@ -33,6 +33,15 @@
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/></svg>
       </button>
     </div>
+    <div id="voice-setup" class="voice-setup" hidden>
+      <p id="voice-setup-text"></p>
+      <progress id="voice-progress"></progress>
+      <div id="voice-progress-text" class="muted"></div>
+      <div class="row center">
+        <button id="voice-download" class="btn small primary">Download</button>
+        <button id="voice-cancel" class="btn small">Cancel</button>
+      </div>
+    </div>
     <label class="timer-duration">
       <span id="timer-duration-label">Duration</span>: <output id="timer-duration-out">60</output>s
       <input type="range" id="timer-duration" min="30" max="120" step="5" value="60">

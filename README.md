@@ -8,7 +8,7 @@ Scoreboard and turn timer for Rummikub. A static, client-side PWA: no backend, a
 
 - **Scoreboard** – run many games at once, 2–6 players, standard Rummikub scoring (enter tiles left in hand; the winner scores the sum). Swipe a game left to archive, export or delete it; start and last-edit timestamps are kept. Tap a round row to edit or delete it. Export copies a share link to the clipboard.
 - **Timer** – floating button on every screen, 30–120 s (default 60 s), warning beep at 15 s and "pi – pi – piiii" for the last 3 seconds.
-- **Voice commands** (optional, mic button in the timer) – say "hop hop", "zmiana kolejki"/"następny gracz" or "next player" for the next player, plus "start", "pauza"/"pause"/"stop", "reset"; Polish and English; keeps listening with the timer closed. Shown in Google Chrome and Safari only (hidden in Brave, Edge, Firefox and others); audio is sent to the browser's speech recognition service.
+- **Voice commands** (optional, mic button in the timer) – say "hop hop", "zmiana kolejki"/"następny gracz" or "next player" for the next player, plus "start", "pauza"/"pause"/"stop", "reset"; Polish and English; keeps listening with the timer closed. Recognition runs offline on the device ([Vosk](https://alphacephei.com/vosk/), WebAssembly), so audio never leaves the phone and it works in all modern browsers, including Brave. The first mic press asks before a one-time download of the speech model for the app language (~59 MB for Polish, ~47 MB for English, library included); it is kept for later use, also offline. Only the current language's model is kept: switching the language downloads the other one and deletes the old one.
 - **Export / import** – share all games or a single game as a long URL. Opening the link on another device lets you pick which games to merge into local storage (newer copy wins).
 - **Settings** – language (auto-detected from the device, override to EN/PL) and colour theme (light, dark, paper, ocean, forest, midnight, or follow system).
 - **PWA** – installable on a phone, works offline.
@@ -19,13 +19,14 @@ Scoreboard and turn timer for Rummikub. A static, client-side PWA: no backend, a
 index.html            app shell
 manifest.webmanifest  PWA manifest
 sw.js                 service worker (app-shell cache)
+vendor/vosk/          Vosk library + speech models, fetched by scripts/fetch-vosk.sh (not in git)
 css/style.css
 js/app.js             hash router + bootstrap
 js/storage.js         localStorage database
 js/share.js           URL export/import codec
 js/timer.js           countdown logic + audio cues
 js/timer-ui.js        floating button + dialog
-js/voice.js           voice commands (Web Speech API)
+js/voice.js           voice commands (Vosk, offline)
 js/util.js            helpers, scoring
 js/i18n.js            translations, language detection
 js/settings-ui.js     settings dialog, theme switching
