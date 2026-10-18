@@ -18,4 +18,17 @@ assert.ok(url.startsWith('https://example.test/app/#import='));
 assert.deepEqual(await parseImportHash(new URL(url).hash), [game]);
 assert.equal(await parseImportHash('#/'), null);
 
+// Voice command matcher.
+const { matchCommands } = await import('./js/voice.js');
+const cmds = (text, off) => matchCommands(text, off).map(([c]) => c);
+assert.deepEqual(cmds('hop hop'), ['next']);
+assert.deepEqual(cmds('hop hop hop hop stop'), ['next', 'pause']);
+const [[, end]] = matchCommands('Hop hop');
+assert.deepEqual(cmds('Hop hop start', end), ['start']);
+assert.deepEqual(cmds('zmiana kolejki'), ['next']);
+assert.deepEqual(cmds('Następny gracz'), ['next']);
+for (const [text, cmd] of [['next player', 'next'], ['Hoop hoop', 'next'], ['whoop whoop', 'next'], ['Pause', 'pause'], ['paws', 'pause'], ['re-set', 'reset'], ['Start', 'start']])
+  assert.deepEqual(cmds(text), [cmd], text);
+for (const text of ['zmiana zdania', 'następny', 'gracz', 'stopa', 'restart', 'starość', 'oops', 'hopefully', 'next round']) assert.deepEqual(cmds(text), [], text);
+
 console.log('ok');

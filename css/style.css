@@ -132,6 +132,12 @@ label > input, label > select { margin-top: 4px; color: var(--fg); }
 .timer-next { display: block; width: 100%; min-height: 64px; font-size: 1.25rem; margin-bottom: 12px; background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
 .timer-secondary { margin-bottom: 16px; }
 .timer-secondary .btn { flex: 1; }
+.timer-secondary .timer-mic { flex: 0 0 auto; display: flex; align-items: center; }
+.timer-mic[aria-pressed=true] { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); animation: pulse 1.2s infinite; }
+.fab.listening::after { content: ''; position: absolute; top: 5px; right: 5px; width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 1.2s infinite; }
+.fab.hit { background: var(--ok); }
+.timer-display.hit { color: var(--ok); }
+@keyframes pulse { 50% { opacity: .5; } }
 .timer-duration { margin-bottom: 8px; }
 .timer-duration input { width: 100%; margin-top: 6px; accent-color: var(--accent); }
 .dialog-close:focus:not(:focus-visible) { outline: none; }

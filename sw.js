@@ -1,6 +1,6 @@
 // Minimal app-shell service worker: cache-first for everything in the shell.
 // Bump CACHE on every deploy so clients pick up new files.
-const CACHE = 'rummikub-score-v5';
+const CACHE = 'rummikub-score-v6';
 const SHELL = [
   './',
   './index.html',
@@ -11,6 +11,7 @@ const SHELL = [
   './js/share.js',
   './js/timer.js',
   './js/timer-ui.js',
+  './js/voice.js',
   './js/util.js',
   './js/views/games-list.js',
   './js/views/new-game.js',

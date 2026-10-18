@@ -57,10 +57,13 @@ export function createTimer({ onTick, onFinish }) {
       duration = sec;
       if (!this.running) { remaining = sec; onTick(remaining); }
     },
-    start() {
-      // AudioContext must be created from a user gesture (this is called from a click).
+    // AudioContext must be created from a user gesture (a click on start, or on the mic for voice starts).
+    unlockAudio() {
       if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
       if (audio.state === 'suspended') audio.resume();
+    },
+    start() {
+      this.unlockAudio();
       endAt = Date.now() + remaining * 1000;
       lastWholeSecond = Math.ceil(remaining);
       interval = setInterval(tick, 100);

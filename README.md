@@ -8,6 +8,7 @@ Scoreboard and turn timer for Rummikub. A static, client-side PWA: no backend, a
 
 - **Scoreboard** – run many games at once, 2–6 players, standard Rummikub scoring (enter tiles left in hand; the winner scores the sum). Swipe a game left to archive, export or delete it; start and last-edit timestamps are kept. Tap a round row to edit or delete it. Export copies a share link to the clipboard.
 - **Timer** – floating button on every screen, 30–120 s (default 60 s), warning beep at 15 s and "pi – pi – piiii" for the last 3 seconds.
+- **Voice commands** (optional, mic button in the timer) – say "hop hop", "zmiana kolejki"/"następny gracz" or "next player" for the next player, plus "start", "pauza"/"pause"/"stop", "reset"; Polish and English; keeps listening with the timer closed. Shown in Google Chrome and Safari only (hidden in Brave, Edge, Firefox and others); audio is sent to the browser's speech recognition service.
 - **Export / import** – share all games or a single game as a long URL. Opening the link on another device lets you pick which games to merge into local storage (newer copy wins).
 - **Settings** – language (auto-detected from the device, override to EN/PL) and colour theme (light, dark, paper, ocean, forest, midnight, or follow system).
 - **PWA** – installable on a phone, works offline.
@@ -24,6 +25,7 @@ js/storage.js         localStorage database
 js/share.js           URL export/import codec
 js/timer.js           countdown logic + audio cues
 js/timer-ui.js        floating button + dialog
+js/voice.js           voice commands (Web Speech API)
 js/util.js            helpers, scoring
 js/i18n.js            translations, language detection
 js/settings-ui.js     settings dialog, theme switching
