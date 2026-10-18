@@ -1,5 +1,5 @@
 // Countdown timer with audible cues. Pure logic + Web Audio, no DOM.
-// Cues: short warning beep at 15s, "pi - pi - piiii" for the last 3 seconds.
+// Cues: short warning beep at 15s, "pi - pi - piiii" for the last 3 seconds; soft chime for a recognised voice command.
 const WARNING_AT = 15;
 
 export function createTimer({ onTick, onFinish }) {
@@ -20,6 +20,23 @@ export function createTimer({ onTick, onFinish }) {
     osc.connect(gain).connect(audio.destination);
     osc.start();
     osc.stop(audio.currentTime + ms / 1000);
+  }
+
+  // Soft two-note sine "ding-ding" with a fade-out; deliberately unlike the square-wave countdown beeps.
+  function chime() {
+    if (!audio) return;
+    [784, 1047].forEach((freq, i) => {
+      const t = audio.currentTime + i * 0.08;
+      const osc = audio.createOscillator();
+      const gain = audio.createGain();
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(0.06, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
+      osc.connect(gain).connect(audio.destination);
+      osc.start(t);
+      osc.stop(t + 0.26);
+    });
   }
 
   function cue(sec) {
@@ -53,6 +70,7 @@ export function createTimer({ onTick, onFinish }) {
     get running() { return interval !== null; },
     get remaining() { return remaining; },
     get duration() { return duration; },
+    chime,
     setDuration(sec) {
       duration = sec;
       if (!this.running) { remaining = sec; onTick(remaining); }

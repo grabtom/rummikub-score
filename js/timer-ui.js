@@ -25,6 +25,7 @@ export function mountTimerUi() {
   // Not persisted: off after reload. Keeps listening with the dialog closed (hands-free).
   const voice = createVoice({
     onCommand(cmd) {
+      timer.chime();
       actions[cmd]();
       clearTimeout(flash);
       flash = setTimeout(() => { flash = null; render(); }, 300);
