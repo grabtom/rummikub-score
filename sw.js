@@ -1,6 +1,6 @@
 // Minimal app-shell service worker: cache-first for everything in the shell.
 // Bump CACHE on every deploy so clients pick up new files. Caches named vosk-* (voice models) survive.
-const CACHE = 'rummikub-score-v8';
+const CACHE = 'rummikub-score-v9';
 const SHELL = [
   './',
   './index.html',

@@ -23,20 +23,25 @@ export function createTimer({ onTick, onFinish }) {
   }
 
   // Soft two-note sine "ding-ding" with a fade-out; deliberately unlike the square-wave countdown beeps.
+  // Pre-rendered into a buffer and played "now": scheduling against audio.currentTime failed in Brave (coarsened clock).
+  let chimeBuf = null;
   function chime() {
     if (!audio) return;
-    [784, 1047].forEach((freq, i) => {
-      const t = audio.currentTime + i * 0.08;
-      const osc = audio.createOscillator();
-      const gain = audio.createGain();
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.0001, t);
-      gain.gain.exponentialRampToValueAtTime(0.06, t + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
-      osc.connect(gain).connect(audio.destination);
-      osc.start(t);
-      osc.stop(t + 0.26);
-    });
+    if (!chimeBuf) {
+      const sr = audio.sampleRate, data = new Float32Array(Math.ceil(sr * 0.35));
+      [784, 1047].forEach((freq, i) => {
+        for (let k = 0, at = Math.round(i * 0.08 * sr); k < 0.26 * sr && at + k < data.length; k++) {
+          const t = k / sr, env = t < 0.01 ? 0.06 * t / 0.01 : 0.06 * Math.pow(0.0001 / 0.06, (t - 0.01) / 0.24);
+          data[at + k] += env * Math.sin(2 * Math.PI * freq * t);
+        }
+      });
+      chimeBuf = audio.createBuffer(1, data.length, sr);
+      chimeBuf.copyToChannel(data, 0);
+    }
+    const src = audio.createBufferSource();
+    src.buffer = chimeBuf;
+    src.connect(audio.destination);
+    src.start();
   }
 
   function cue(sec) {
